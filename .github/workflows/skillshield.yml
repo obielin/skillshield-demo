@@ -1,0 +1,21 @@
+name: SkillShield
+
+on: [pull_request]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: obielin/skillshield@v1
+        id: skillshield
+        with:
+          path: skills
+      - uses: github/codeql-action/upload-sarif@v4
+        if: always()
+        with:
+          sarif_file: ${{ steps.skillshield.outputs.sarif-file }}
+          category: skillshield
